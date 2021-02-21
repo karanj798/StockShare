@@ -21,7 +21,7 @@ router.post('/buy', (req, res) => {
             twilioApp.messages
                 .create({
                     body: `You've just bought ${ticker} x${qty}.`,
-                    from: '+17634017978',
+                    from: config.twilioConfig.senderPhoneNumber,
                     to: `+1${e.data().phone}`
                 })
                 .then(message => res.json({ msg: 'succ' }))
@@ -42,7 +42,7 @@ router.post('/sell', (req, res) => {
             twilioApp.messages
                 .create({
                     body: `You've just sold ${ticker} x${qty}.`,
-                    from: '+17634017978',
+                    from: config.twilioConfig.senderPhoneNumber,
                     to: `+1${e.data().phone}`
                 })
                 .then(message => res.json({ msg: 'succ' }))
