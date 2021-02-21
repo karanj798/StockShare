@@ -73,7 +73,7 @@ class Search extends Component {
                 .then(dat => {
                     this.setState({modal: false, qty: 0, type: '', open: true})
                     if (dat.msg === 'succ') {
-                        this.setState({severity: 'success', message: `Stock: ${this.state.selectedItem.displaySymbol} ${e.target.innerHTML === 'Buy ' ? ' bought.' : ' sold.'}`})
+                        this.setState({severity: 'success', message: `Transaction completed.`})
                     } else {
                         this.setState({severity: 'error', message: 'Transaction failed.'})
                     }

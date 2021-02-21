@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, ListItemText, Divider, Snackbar, Button } from '@material-ui/core';
+import { Typography, ListItemText, Snackbar, Button, Grid, Paper, Box } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 /**
@@ -37,38 +37,52 @@ class Dashboard extends Component {
     }
 
     handleClick() {
-        // fetch(`/api/get/transactions`)
-        // .then(res => console.log())
+        fetch(`/api/csv/download?_id=${localStorage.getItem('_id')}`)
+        .then(res => res.text())
+        .then(data => {
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(data);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = 'Transactions.csv';
+            hiddenElement.click();
+        })
     }
 
     render() {
         // JSX denoting this component
         return (
             <div>
-                <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Bought</Typography>
+                <Grid style={{ padding: 16, margin: 'auto', maxWidth: 400, justifyContent: "center" }}>
+                    <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Bought</Typography>
+                    <Paper style={{ padding: 16, justifyContent: "center", display: "block" }}>
 
-                {this.state.bought.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Bought</Typography>}
-                {
-                    this.state.bought.map((item, id) =>
-                        <span key={id}>
-                            <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
-                            <Divider />
-                        </span>
-                    )
-                }
-                <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Sold</Typography>
+                        {this.state.bought.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Bought</Typography>}
+                        {
+                            this.state.bought.map((item, id) =>
+                                <span key={id}>
+                                    <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
+                                </span>
+                            )
+                        }
+                    </Paper>
+                    <Box p={1} />
+                    <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Sold</Typography>
+                    <Paper style={{ padding: 16, justifyContent: "center", display: "block" }}>
 
-                {this.state.sold.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Sold</Typography>}
-                {
-                    this.state.sold.map((item, id) =>
-                        <span key={id}>
-                            <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
-                            <Divider />
-                        </span>
-                    )
-                }
-
-                <Button id="exportToCsv" variant="contained" color="primary" onClick={e => this.handleClick()}>Export to CSV</Button>
+                        {this.state.sold.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Sold</Typography>}
+                        {
+                            this.state.sold.map((item, id) =>
+                                <span key={id}>
+                                    <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
+                                </span>
+                            )
+                        }
+                    </Paper>
+                    <Box p={1} />
+                    <Grid container style={{ margin: 'auto', justifyContent: "center" }}>
+                    <Button id="exportToCsv" variant="contained" color="primary" onClick={e => this.handleClick()}>Export to CSV</Button>
+                    </Grid>
+                </Grid>
 
                 <Snackbar
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
