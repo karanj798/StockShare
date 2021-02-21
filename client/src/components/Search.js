@@ -4,6 +4,7 @@ import { Search as SearchIcon } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { withStyles } from '@material-ui/core/styles';
 
+// Style for modal
 const styles = (theme) => ({
     modal: {
         display: 'flex',
@@ -19,7 +20,7 @@ const styles = (theme) => ({
 });
 
 /**
- * Search component which lets users search for jobs.
+ * Search component which lets users search for stocks.
  */
 class Search extends Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class Search extends Component {
     }
 
     handleEvent(e) {
-        // If enter key is received perform HTTP request to search jobs
+        // If enter key is received perform HTTP request to search stocks
         if (e.keyCode === 13) {
             fetch(`/api/stocks/info/symbol?q=${this.state.searchQuery}`)
                 .then(res => res.json())
@@ -60,6 +61,7 @@ class Search extends Component {
         // Exit function if state fields are empty
         if (this.state.searchResults === '') return;
         if (type === 'final') {
+            // Perform HTTP request to store transaction
             fetch(`/api/stocks/transactions/${e.target.innerHTML === 'Buy ' ? 'buy' : 'sell'}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -84,14 +86,17 @@ class Search extends Component {
     }
 
     handleClose() {
+        // Change state of Snackbar component
         this.setState({ open: false });
     }
 
     handleModalClose() {
+        // Change state of Modal component
         this.setState({ modal: false, qty: 0 })
     }
 
     setQty(val) {
+        // Set stock quantity based on user input
         this.setState({ qty: val })
     }
 
@@ -174,5 +179,4 @@ class Search extends Component {
         );
     }
 }
-
 export default withStyles(styles)(Search);

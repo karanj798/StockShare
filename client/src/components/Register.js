@@ -45,6 +45,7 @@ class Register extends Component {
     }
 
     handleClose() {
+        // Change state of Snackbar component.
         this.setState({ open: false });
     }
 

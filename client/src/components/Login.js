@@ -44,6 +44,7 @@ class Login extends Component {
     }
 
     handleClose() {
+        // Change state of Snackbar component.
         this.setState({ open: false });
     }
 

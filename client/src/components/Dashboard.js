@@ -8,7 +8,6 @@ import { Alert } from '@material-ui/lab';
 class Dashboard extends Component {
     constructor(props) {
         if (localStorage.getItem("_id") === null) window.location.replace(`${window.location.protocol + '//' + window.location.host}/login`);
-
         super(props);
         this.state = {
             bought: [],
@@ -33,10 +32,12 @@ class Dashboard extends Component {
     }
 
     handleClose() {
+        // Change stateof Snackbar component
         this.setState({ open: false });
     }
 
     handleClick() {
+        // Download CSV file
         fetch(`/api/csv/download?_id=${localStorage.getItem('_id')}`)
         .then(res => res.text())
         .then(data => {
