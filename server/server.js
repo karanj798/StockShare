@@ -17,6 +17,9 @@ app.use('/api/stocks/transactions', transactions)
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('../client/build'))
+    app.get('/*', (req, res) => {
+        res.sendFile(path.join(path.resolve(path.dirname('')), 'client', 'build', 'index.html'))
+    })
 }
 
 app.listen(process.env.PORT || 3001)
