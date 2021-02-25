@@ -22,6 +22,7 @@ router.get('/download', (req, res) => {
         // Get document using id
         db.collection('userCollection').doc(id).get()
             .then(doc => {
+                // Merge two list into one
                 doc.data().bought.forEach(row => data.push({ Ticker: row.ticker, Quantity: row.qty, Price: row.price, Trade_Type: 'Buy' }))
                 doc.data().sold.forEach(row => data.push({ Ticker: row.ticker, Quantity: row.qty, Price: row.price, Trade_Type: 'Sell' }))
                 resolve(data) 

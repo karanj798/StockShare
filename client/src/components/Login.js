@@ -36,6 +36,7 @@ class Login extends Component {
         })
             .then(res => res.json())
             .then(dat => {
+                // If the transaction was successful open dashboard
                 if (dat.status === 'good') {
                     localStorage.setItem('id', dat['id']);
                     window.location.replace(`${window.location.protocol + '//' + window.location.host}/dashboard`);

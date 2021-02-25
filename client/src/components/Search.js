@@ -86,8 +86,10 @@ class Search extends Component {
                 })
 
         } else if (type === 'menu') {
+            // Open menu button
             this.setState({ selectedItem: item, anchorEl: e.currentTarget })
         } else {
+            // Perform HTTP request to get stock price
             fetch(`/api/stocks/info/quote?q=${this.state.selectedItem.displaySymbol}`)
                 .then(res => res.json())
                 .then(dat => this.setState({ modal: true, type: type.includes('buy') ? 'buy' : 'sell', currentPrice: dat.c, anchorEl: null }))
@@ -110,6 +112,7 @@ class Search extends Component {
     }
 
     handleMenuClose() {
+        // Set anchor to null to hide it
         this.setState({ anchorEl: null })
     }
 
