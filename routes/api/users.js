@@ -24,7 +24,7 @@ router.post('/login', (req, res) => {
 
                     // Check current username/password with ones from request's body
                     if (doc.data().username == username && doc.data().password == password) {
-                        resolve({ status: 'good', _id: doc.id })
+                        resolve({ status: 'good', id: doc.id })
                     }
                 })
                 reject({ msg: 'bad' })
@@ -52,7 +52,7 @@ router.post('/register', (req, res) => {
             if (querySnapShot.empty) {
 
                 // No documents found, register the user
-                db.collection('userCollection').add({ username: username, password: password, phone: phone, bought: [], sold: [], balance: 10000 })
+                db.collection('userCollection').add({ username: username, password: password, phone: phone, bought: [], sold: [] })
                     .then(e => res.json({ status: true }))
             } else {
 

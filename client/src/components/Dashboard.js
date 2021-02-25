@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
-import { Typography, ListItemText, Snackbar, Button, Grid, Paper, Box } from '@material-ui/core';
+import { Typography, Snackbar, Button, Grid, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import { withStyles } from '@material-ui/core/styles';
+
+import NavBar from './NavBar';
+
+// Style for modal
+const styles = (theme) => ({
+    table: {
+        maxWidth: 650,
+    },
+});
+
 
 /**
  * Dashboard component which displays the stocks that were bought and sold.
  */
 class Dashboard extends Component {
     constructor(props) {
-        if (localStorage.getItem("_id") === null) window.location.replace(`${window.location.protocol + '//' + window.location.host}/login`);
         super(props);
         this.state = {
             bought: [],
             sold: [],
             open: false,
-            severity: '',
+            severity: 'warning',
             message: ''
         }
         this.handleClose = this.handleClose.bind(this);
@@ -22,11 +32,11 @@ class Dashboard extends Component {
 
     componentDidMount() {
         // Update states by fetching data when page is loaded first
-        fetch(`/api/stocks/transactions/buy?_id=${localStorage.getItem('_id')}`)
+        fetch(`/api/stocks/transactions/buy?id=${localStorage.getItem('id')}`)
             .then(res => res.json())
             .then(dat => this.setState({ 'bought': dat }));
 
-        fetch(`/api/stocks/transactions/sell?_id=${localStorage.getItem('_id')}`)
+        fetch(`/api/stocks/transactions/sell?id=${localStorage.getItem('id')}`)
             .then(res => res.json())
             .then(dat => this.setState({ 'sold': dat }));
     }
@@ -38,50 +48,77 @@ class Dashboard extends Component {
 
     handleClick() {
         // Download CSV file
-        fetch(`/api/csv/download?_id=${localStorage.getItem('_id')}`)
-        .then(res => res.text())
-        .then(data => {
-            var hiddenElement = document.createElement('a');
-            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(data);
-            hiddenElement.target = '_blank';
-            hiddenElement.download = 'Transactions.csv';
-            hiddenElement.click();
-        })
+        fetch(`/api/csv/download?id=${localStorage.getItem('id')}`)
+            .then(res => res.text())
+            .then(data => {
+                var hiddenElement = document.createElement('a');
+                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(data);
+                hiddenElement.target = '_blank';
+                hiddenElement.download = 'Transactions.csv';
+                hiddenElement.click();
+            })
     }
 
     render() {
+        const { classes } = this.props;
+
         // JSX denoting this component
         return (
             <div>
-                <Grid style={{ padding: 16, margin: 'auto', maxWidth: 400, justifyContent: "center" }}>
+                <NavBar status="logged_in" />
+                <Grid style={{ padding: 16, margin: 'auto', justifyContent: "center" }}>
                     <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Bought</Typography>
-                    <Paper style={{ padding: 16, justifyContent: "center", display: "block" }}>
-
-                        {this.state.bought.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Bought</Typography>}
-                        {
-                            this.state.bought.map((item, id) =>
-                                <span key={id}>
-                                    <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
-                                </span>
-                            )
-                        }
-                    </Paper>
+                    {
+                        this.state.bought.length !== 0 &&
+                        <TableContainer className={classes.table} component={Paper} style={{ padding: 16, margin: 'auto' }}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Ticker</TableCell>
+                                        <TableCell align="right">Price</TableCell>
+                                        <TableCell align="right">Quantity</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {this.state.bought.map((row, id) => (
+                                        <TableRow key={id}>
+                                            <TableCell>{row.ticker}</TableCell>
+                                            <TableCell align="right">{row.price}</TableCell>
+                                            <TableCell align="right">{row.qty}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    }
                     <Box p={1} />
                     <Typography variant="h4" align="center" component="h1" gutterBottom>Stocks Sold</Typography>
-                    <Paper style={{ padding: 16, justifyContent: "center", display: "block" }}>
-
-                        {this.state.sold.length === 0 && <Typography variant="h5" align="center" component="h4" gutterBottom>No Stocks Sold</Typography>}
-                        {
-                            this.state.sold.map((item, id) =>
-                                <span key={id}>
-                                    <ListItemText primary={Object.keys(item)[0] + ' x' + Object.values(item)[0]} />
-                                </span>
-                            )
-                        }
-                    </Paper>
+                    {
+                        this.state.sold.length !== 0 &&
+                        <TableContainer className={classes.table} component={Paper} style={{ padding: 16, margin: 'auto' }}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Ticker</TableCell>
+                                        <TableCell align="right">Price</TableCell>
+                                        <TableCell align="right">Quantity</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {this.state.sold.map((row, id) => (
+                                        <TableRow key={id}>
+                                            <TableCell>{row.ticker}</TableCell>
+                                            <TableCell align="right">{row.price}</TableCell>
+                                            <TableCell align="right">{row.qty}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    }
                     <Box p={1} />
                     <Grid container style={{ margin: 'auto', justifyContent: "center" }}>
-                    <Button id="exportToCsv" variant="contained" color="primary" onClick={e => this.handleClick()}>Export to CSV</Button>
+                        <Button id="exportToCsv" variant="contained" color="primary" onClick={e => this.handleClick()}>Export to CSV</Button>
                     </Grid>
                 </Grid>
 
@@ -97,4 +134,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default withStyles(styles)(Dashboard);

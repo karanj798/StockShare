@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
-import NavBar from './components/NavBar';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from "./components/Dashboard";
@@ -17,23 +16,23 @@ function App() {
             <div>
                 <Switch>
                     <Route path="/dashboard">
-                        <NavBar status="logged_in" />
-                        <Dashboard />
+                        {
+                            localStorage.getItem("id") === null ? <Redirect to="/login" /> : <Dashboard />
+                        }
                     </Route>
                     <Route path="/search">
-                        <NavBar status="logged_in" />
-                        <Search />
+                        {
+                            localStorage.getItem("id") === null ? <Redirect to="/login" /> : <Search />
+                        }
                     </Route>
                     <Route path="/login">
-                        <NavBar status="home" />
                         <Login />
                     </Route>
                     <Route path="/register">
-                        <NavBar status="home" />
                         <Register />
                     </Route>
                     <Route path="/">
-                        <NavBar status="home" />
+                        <Redirect to="/login" />
                     </Route>
                 </Switch>
             </div>

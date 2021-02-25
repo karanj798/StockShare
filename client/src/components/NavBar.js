@@ -12,7 +12,7 @@ class NavBar extends Component {
 
     handleClick() {
         // Remove user session and redirect to login route
-        localStorage.removeItem('_id');
+        localStorage.removeItem('id');
         window.location.replace(`${window.location.protocol + '//' + window.location.host}/login`);
     }
 

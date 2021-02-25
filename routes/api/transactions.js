@@ -18,15 +18,15 @@ const twilioApp = client(config.twilioConfig.accountSid, config.twilioConfig.aut
  * @param {callback} middleware - Express middleware.
  */
 router.post('/buy', (req, res) => {
-    const id = req.body._id
+    const id = req.body.id
     const ticker = req.body.ticker
     const qty = req.body.qty
+    const price = req.body.price
 
     // Update Firebase document
     db.collection('userCollection').doc(id).update({
-        bought: firebase.firestore.FieldValue.arrayUnion({ [ticker]: qty })
+        bought: firebase.firestore.FieldValue.arrayUnion({ ticker: ticker, qty: qty, price: price })
     }).then(e => {
-        
         // Send a text message after transaction is recorded
         db.collection('userCollection').doc(id).get().then(e => {
             twilioApp.messages
@@ -48,15 +48,15 @@ router.post('/buy', (req, res) => {
  * @param {callback} middleware - Express middleware.
  */
 router.post('/sell', (req, res) => {
-    const id = req.body._id
+    const id = req.body.id
     const ticker = req.body.ticker
     const qty = req.body.qty
+    const price = req.body.price
 
     // Update Firebase document
     db.collection('userCollection').doc(id).update({
-        sold: firebase.firestore.FieldValue.arrayUnion({ [ticker]: qty })
+        sold: firebase.firestore.FieldValue.arrayUnion({ ticker: ticker, qty: qty, price: price })
     }).then(e => {
-
         // Send a text message after transaction is recorded
         db.collection('userCollection').doc(id).get().then(e => {
             twilioApp.messages
@@ -78,7 +78,7 @@ router.post('/sell', (req, res) => {
  * @param {callback} middleware - Express middleware.
  */
 router.get('/buy', (req, res) => {
-    const id = req.query._id
+    const id = req.query.id
 
     // Fetch all bought stocks using id of document
     db.collection('userCollection').doc(id).get()
@@ -93,7 +93,7 @@ router.get('/buy', (req, res) => {
  * @param {callback} middleware - Express middleware.
  */
 router.get('/sell', (req, res) => {
-    const id = req.query._id
+    const id = req.query.id
 
     // Fetch all sold stocks using id of document
     db.collection('userCollection').doc(id).get()
