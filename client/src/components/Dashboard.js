@@ -51,7 +51,7 @@ class Dashboard extends Component {
         fetch(`/api/csv/download?id=${localStorage.getItem('id')}`)
             .then(res => res.text())
             .then(data => {
-                var hiddenElement = document.createElement('a');
+                let hiddenElement = document.createElement('a');
                 hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(data);
                 hiddenElement.target = '_blank';
                 hiddenElement.download = 'Transactions.csv';
