@@ -64,6 +64,11 @@ class Search extends Component {
 
     handleClick(e, item, type) {
         if (type === 'final') {
+            // Handling Invalid Input
+            if (parseInt(this.state.qty) <= 0) {
+                this.setState({ modal: false, open:true, severity: 'error', message: 'Invalid input.', qty: 0 })
+                return;
+            }
             // Perform HTTP request to store transaction
             fetch(`/api/stocks/transactions/${this.state.type}`, {
                 method: 'POST',
