@@ -6,7 +6,7 @@ The core idea behind this web application is for tracking stock market trades of
 ## Configuration
 ```bash
 # Clone Repo
-git clone https://github.com/UOITEngineering3/assignment2winter2021-karanj798
+git clone https://github.com/karanj798/StockShare
 cd assignment1winter2021-karanj798
 
 # Start Backend Server
